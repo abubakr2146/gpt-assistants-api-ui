@@ -257,25 +257,6 @@ def reset_chat():
 
 
 def load_chat_screen(assistant_id, assistant_title):
-    if enabled_file_upload_message:
-        uploaded_file = st.sidebar.file_uploader(
-            enabled_file_upload_message,
-            type=[
-                "txt",
-                "pdf",
-                "png",
-                "jpg",
-                "jpeg",
-                "csv",
-                "json",
-                "geojson",
-                "xlsx",
-                "xls",
-            ],
-            disabled=st.session_state.in_progress,
-        )
-    else:
-        uploaded_file = None
 
     st.title(assistant_title if assistant_title else "")
     user_msg = st.chat_input(
@@ -288,8 +269,6 @@ def load_chat_screen(assistant_id, assistant_title):
         st.session_state.chat_log.append({"name": "user", "msg": user_msg})
 
         file = None
-        if uploaded_file is not None:
-            file = handle_uploaded_file(uploaded_file)
         run_stream(user_msg, file, assistant_id)
         st.session_state.in_progress = False
         st.session_state.tool_call = None
