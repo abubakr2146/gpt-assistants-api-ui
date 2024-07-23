@@ -188,9 +188,15 @@ def format_annotation(text):
 
         if file_citation := getattr(annotation, "file_citation", None):
             cited_file = client.files.retrieve(file_citation.file_id)
-            citations.append(
-                f"[{index}] {file_citation.quote} from {cited_file.filename}"
-            )
+            quote = getattr(file_citation, "quote", None)
+            if quote:
+                citations.append(
+                    f"[{index}] {quote} from {cited_file.filename}"
+                )
+            else:
+                citations.append(
+                    f"[{index}] File citation from {cited_file.filename}"
+                )
         elif file_path := getattr(annotation, "file_path", None):
             link_tag = create_file_link(
                 annotation.text.split("/")[-1],
@@ -311,6 +317,7 @@ def main():
             authenticator.logout(location="sidebar")
 
     if multi_agents:
+        print("Multi Agent has been loaded")
         assistants_json = json.loads(multi_agents)
         assistants_object = {f'{obj["title"]}': obj for obj in assistants_json}
         selected_assistant = st.sidebar.selectbox(
