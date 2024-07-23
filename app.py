@@ -215,6 +215,7 @@ def run_stream(user_input, file, selected_assistant_id):
         thread_id=st.session_state.thread.id,
         assistant_id=selected_assistant_id,
         event_handler=EventHandler(),
+        temperature=0
     ) as stream:
         stream.until_done()
 
@@ -269,7 +270,7 @@ def load_chat_screen(assistant_id, assistant_title):
         st.session_state.chat_log.append({"name": "user", "msg": user_msg})
 
         file = None
-        run_stream(user_msg, file, assistant_id)
+        run_stream(user_msg+"Use information from the given document to answer.", file, assistant_id)
         st.session_state.in_progress = False
         st.session_state.tool_call = None
         st.rerun()
